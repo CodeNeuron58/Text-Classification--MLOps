@@ -99,6 +99,10 @@ def main():
         metrics = evaluate_model(model, X_test, y_test)
         save_metrics(metrics)
         
+        # Log the model type (e.g., Logistic Regression)
+        model_type = type(model).__name__  # This will give you the model's class name, e.g., 'LogisticRegression'
+        mlflow.log_param("model_type", model_type)
+        
         # log metrics
         for metric, value in metrics.items():
             mlflow.log_metric(metric, value)
