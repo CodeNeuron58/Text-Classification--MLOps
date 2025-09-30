@@ -86,11 +86,25 @@ def save_metrics(metrics, output_path="reports/metrics.json"):
     except Exception as e:
         logger.error(f"Error saving metrics: {e}")
         raise
+    
+def save_model_info(run_id: str, model_path: str, output_path: str):
+    logger.info(f"Saving model info to {output_path}")
+    try:
+        model_info = {
+            "run_id": run_id,
+            "model_path": model_path
+        }
+        with open(output_path, "w") as file:
+            json.dump(model_info, file, indent=4)
+        logger.info("Model info saved successfully.")
+    except Exception as e:
+        logger.error(f"Error saving model info: {e}")
+        raise
 
 
 def main():
     mlflow.set_experiment("DVC Pipeline")
-    with mlflow.start_run():
+    with mlflow.start_run() as run:
         test_data_path = "data/processed/test.csv"
         test_data = load_data(test_data_path)
         X_test, y_test = split_data(test_data)
@@ -115,6 +129,9 @@ def main():
         
         # Log model
         mlflow.sklearn.log_model(model, "model")
+        
+        # save model info
+        save_model_info(run.info.run_id, model_path, "models/model_info.json")
         
         # Save and log the notebook
         mlflow.log_artifact(__file__)
