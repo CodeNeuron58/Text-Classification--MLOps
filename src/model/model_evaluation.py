@@ -7,6 +7,12 @@ import numpy as np
 import pandas as pd
 from sklearn.metrics import accuracy_score, precision_score, recall_score, roc_auc_score
 
+import mlflow
+import mlflow.sklearn
+import dagshub
+
+dagshub.init(repo_owner='CodeNeuron58', repo_name='Text-Classification--MLOps', mlflow=True)
+
 # Custom logger
 sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 from utils.logger import get_logger
@@ -83,15 +89,43 @@ def save_metrics(metrics, output_path="reports/metrics.json"):
 
 
 def main():
-    logger.info("Starting model evaluation pipeline...")
-    test_data = load_data("data/processed/test.csv")
-    X_test, y_test = split_data(test_data)
-    model = load_model("models/model.pkl")
-    metrics = evaluate_model(model, X_test, y_test)
-    save_metrics(metrics)
-
-    logger.info("Model evaluation pipeline completed successfully.")
-
+    mlflow.set_experiment("DVC Pipeline")
+    with mlflow.start_run():
+        test_data_path = "data/processed/test.csv"
+        test_data = load_data(test_data_path)
+        X_test, y_test = split_data(test_data)
+        model_path = "models/model.pkl"
+        model = load_model(model_path)
+        metrics = evaluate_model(model, X_test, y_test)
+        save_metrics(metrics)
+        
+        # log metrics
+        for metric, value in metrics.items():
+            mlflow.log_metric(metric, value)
+            
+        # Log model parameters to MLflow
+        if hasattr(model, 'get_params'):
+            params = model.get_params()
+            for param_name, param_value in params.items():
+                mlflow.log_param(param_name, param_value)
+        
+        # Log model
+        mlflow.sklearn.log_model(model, "model")
+        
+        # Save and log the notebook
+        mlflow.log_artifact(__file__)
+        
+        # log metrics file
+        mlflow.log_artifact("reports/metrics.json")
+        
+        # log model file
+        mlflow.log_artifact("models/model.pkl")
+        
+        # log test data file
+        mlflow.log_artifact("data/processed/test.csv")
+        
+        mlflow.end_run()
+        
 
 if __name__ == "__main__":
     main()
