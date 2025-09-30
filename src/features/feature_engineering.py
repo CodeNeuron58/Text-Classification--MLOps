@@ -3,6 +3,8 @@ import yaml
 import pandas as pd
 import numpy as np
 from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.model_selection import train_test_split
+import pickle
 
 # Custom logger
 import sys
@@ -52,7 +54,7 @@ def split_data(train_data, test_data):
         raise
 
 
-def apply_bag_of_words(X_train, X_test, params_file="params.yaml"):
+def apply_ftidf(X_train, X_test, params_file="params.yaml"):
     logger.info(f"Applying tfidf with params from {params_file}")
     try:
         params = yaml.safe_load(open(params_file))["feature_engineering"]["max_features"]
@@ -61,6 +63,9 @@ def apply_bag_of_words(X_train, X_test, params_file="params.yaml"):
         X_test_vectorized = vectorizer.transform(X_test)
         logger.info(f"tfidf applied. Train shape: {X_train_vectorized.shape}, "
                     f"Test shape: {X_test_vectorized.shape}")
+        
+        pickle.dump(vectorizer, open("models/vectorizer.pkl", "wb"))
+        
         return X_train_vectorized, X_test_vectorized
     except Exception as e:
         logger.error(f"Error in tfidf feature extraction: {e}")
@@ -100,7 +105,7 @@ def featured_data(train_file, test_file, data_path):
     train_data, test_data = load_data(train_file, test_file)
     X_train, y_train, X_test, y_test = split_data(train_data, test_data)
     X_train, X_test = handle_nan(X_train, X_test)
-    X_train_vectorized, X_test_vectorized = apply_bag_of_words(X_train, X_test)
+    X_train_vectorized, X_test_vectorized = apply_ftidf(X_train, X_test)
     combining_data(X_train_vectorized, X_test_vectorized, y_train, y_test, data_path)
     logger.info("Feature engineering pipeline completed successfully.")
 
