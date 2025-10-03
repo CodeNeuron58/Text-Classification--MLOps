@@ -33,6 +33,6 @@ jobs:
 
       - name: Run model tests
         env:
-          DAGSHUB_PAT: ${{ secrets.DAGSHUB_PAT }}
+          DAGSHUB_PATH: ${{ secrets.DAGSHUB_PATH }}
         run: |
           python -m unittest tests/model_test.py
