@@ -11,7 +11,21 @@ import mlflow
 import mlflow.sklearn
 import dagshub
 
-dagshub.init(repo_owner='CodeNeuron58', repo_name='Text-Classification--MLOps', mlflow=True)
+
+# Set up DagsHub credentials for MLflow tracking
+dagshub_token = os.getenv("DAGSHUB_PATH")
+if not dagshub_token:
+    raise EnvironmentError("DAGSHUB_PAT environment variable is not set")
+
+os.environ["MLFLOW_TRACKING_USERNAME"] = dagshub_token
+os.environ["MLFLOW_TRACKING_PASSWORD"] = dagshub_token
+
+# Set up MLflow tracking URI
+tracking_uri = os.getenv("MLFLOW_TRACKING_URI")
+if not tracking_uri:
+    raise EnvironmentError("MLFLOW_TRACKING_URI environment variable is not set")
+mlflow.set_tracking_uri(tracking_uri)
+
 
 # Custom logger
 sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
