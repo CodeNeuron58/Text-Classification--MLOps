@@ -131,7 +131,7 @@ def main():
         mlflow.sklearn.log_model(model, "model")
         
         # save model info
-        save_model_info(run.info.run_id, model_path, "models/model_info.json")
+        save_model_info(run.info.run_id, model_path, "reports/model_info.json")
         
         # Save and log the notebook
         mlflow.log_artifact(__file__)
