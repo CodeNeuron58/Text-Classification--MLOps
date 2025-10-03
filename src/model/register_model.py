@@ -18,11 +18,7 @@ os.environ["MLFLOW_TRACKING_USERNAME"] = dagshub_token
 os.environ["MLFLOW_TRACKING_PASSWORD"] = dagshub_token
 
 # Set up MLflow tracking URI
-tracking_uri = os.getenv("MLFLOW_TRACKING_URI")
-if not tracking_uri:
-    raise EnvironmentError("MLFLOW_TRACKING_URI environment variable is not set")
-mlflow.set_tracking_uri(tracking_uri)
-
+tracking_uri = "https://dagshub.com/CodeNeuron58/Text-Classification--MLOps.mlflow"
 
 # Custom logger
 sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
