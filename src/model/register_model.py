@@ -2,9 +2,12 @@ import json
 import mlflow
 from mlflow.tracking import MlflowClient
 import dagshub
+from dotenv import load_dotenv
 
 import os
 import sys
+
+load_dotenv()
 
 # Set up DagsHub credentials for MLflow tracking
 dagshub_token = os.getenv("DAGSHUB_PATH")

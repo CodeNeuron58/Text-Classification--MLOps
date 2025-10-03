@@ -10,7 +10,9 @@ from sklearn.metrics import accuracy_score, precision_score, recall_score, roc_a
 import mlflow
 import mlflow.sklearn
 import dagshub
+from dotenv import load_dotenv
 
+load_dotenv()
 
 # Set up DagsHub credentials for MLflow tracking
 dagshub_token = os.getenv("DAGSHUB_PATH")
