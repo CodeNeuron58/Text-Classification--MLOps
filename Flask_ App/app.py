@@ -9,10 +9,10 @@ dagshub.init(repo_owner='CodeNeuron58', repo_name='Text-Classification--MLOps', 
 app = Flask(__name__)
 
 
-model_name = "LR model"
-model_version = 1
+# model_name = "LR model"
+# model_version = 1
 
-model_uri = f"models:/{model_name}/{model_version}"
+model_uri = f"runs:/0d75970dfb02434f9da41d70ee28b7e9/model"
 model = mlflow.pyfunc.load_model(model_uri)
 
 vectorizer = pickle.load(open("models/vectorizer.pkl", "rb"))

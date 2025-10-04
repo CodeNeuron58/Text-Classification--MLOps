@@ -65,7 +65,7 @@ def main():
     try:
         model_info_path = 'reports/model_info.json'
         model_info = load_model_info(model_info_path)
-        model_name = "LogR model"
+        model_name = "MyModel"
         register_model(model_name, model_info)
     except Exception as e:
         logger.error('Failed to complete the model registration process: %s', e)

@@ -115,7 +115,7 @@ def save_model_info(run_id: str, model_path: str, output_path: str):
 
 
 def main():
-    mlflow.set_experiment("DVC Pipeline")
+    mlflow.set_experiment("Full Pipeline")
     with mlflow.start_run() as run:
         test_data_path = "data/processed/test.csv"
         test_data = load_data(test_data_path)
