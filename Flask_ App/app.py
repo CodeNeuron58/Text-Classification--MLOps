@@ -12,7 +12,11 @@ app = Flask(__name__)
 # model_name = "LR model"
 # model_version = 1
 
-model_uri = f"runs:/0d75970dfb02434f9da41d70ee28b7e9/model"
+# # Option 1: Get the latest production version
+# latest_production_version = client.get_latest_versions(name=model_name, stages=["Production"])[0].version
+# model_uri = f"models:/{model_name}/{latest_production_version}"
+
+model_uri = f"runs:/20fa0da1a7ad4ebbbe28eb671974573c/model"
 model = mlflow.pyfunc.load_model(model_uri)
 
 vectorizer = pickle.load(open("models/vectorizer.pkl", "rb"))
